@@ -17,20 +17,22 @@ class App extends Component {
   };
 
   addContact = ({ name, number }) => {
-    console.log(name, number);
     const contact = {
       id: shortid.generate(),
       name,
       number,
     };
-    this.setState(prevState => ({
-      contacts: [contact, ...prevState.contacts],
-    }));
+    if (contact.name !== '' && contact.number !== '') {
+      this.setState(prevState => ({
+        contacts: [contact, ...prevState.contacts],
+      }));
+    }
+    console.log('пустое поле');
   };
 
   deleteContact = contactId => {
     this.setState(prevState => ({
-      contacts: prevState.contacts.filter(todo => todo.id !== contactId),
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
 
@@ -46,15 +48,16 @@ class App extends Component {
     );
 
     const { filter } = this.state;
+    const { addContact, changeFilter, deleteContact } = this;
     return (
       <div className="App">
         <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.addContact} />
+        <ContactForm onSubmit={addContact} />
         <h2>Contacts</h2>
-        <Filter value={filter} onChange={this.changeFilter} />
+        <Filter value={filter} onChange={changeFilter} />
         <ContactList
           contacts={visibleContacts}
-          onDeleteContact={this.deleteContact}
+          onDeleteContact={deleteContact}
         />
       </div>
     );
